@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,22 +13,23 @@ namespace Optitime.Classes
     public class Task
     {
         [Key]
-        public int TaskId { get; set; }
+        public Guid Id { get; set; }
         [MaxLength(150)]
         [Required]
         public string TaskName { get; set; }
         [MaxLength(500)]
         public string Description { get; set; }
-        public int? ProjectId { get; set; }
+        public Guid? ProjectId { get; set; }
         [Required]
-        public int AssignedToUserId { get; set; }
+        public Guid AssignedToUserId { get; set; }
         [MaxLength(50)]
         public string Status { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-
+        [ForeignKey(nameof(ProjectId))]
         public Project Project { get; set; }
+        [ForeignKey(nameof(AssignedToUserId))]
         public User AssignedToUser { get; set; }
     }
 }

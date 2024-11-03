@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Optitime.Classes
 {
-    [Index(nameof(RoleName), IsUnique = true)]
+    [Index(nameof(Name), IsUnique = true)]
     public class Role
     {
         [Key]
-        public int RoleId { get; set; }
+        public Guid Id { get; set; }
         [MaxLength(50)]
         [Required]
-        public string RoleName { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -2,20 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Optitime.Classes
 {
-    [Index(nameof(ProjectName), IsUnique = true)]
+    [Index(nameof(Name), IsUnique = true)]
     public class Project
     {
         [Key]
-        public int ProjectId { get; set; }
+        public Guid Id { get; set; }
         [MaxLength(100)]
         [Required]
-        public string ProjectName { get; set; }
+        public string Name { get; set; }
         [MaxLength(500)]
 
         public string Description { get; set; }
@@ -27,8 +28,8 @@ namespace Optitime.Classes
         [Required]
         public string Status { get; set; }
         [Required]
-        public int OwnerId { get; set; }
-
+        public Guid OwnerId { get; set; }
+        [ForeignKey(nameof(OwnerId))]
         public User Owner { get; set; }
     }
 }

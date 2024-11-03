@@ -10,10 +10,10 @@ namespace Optitime.Classes
     public class Company
     {
         [Key]
-        public int CompanyId { get; set; }
+        public Guid Id { get; set; }
         [MaxLength(150)]
         [Required]
-        public string CompanyName { get; set; }
+        public string Name { get; set; }
         [MaxLength(255)]
         public string Address { get; set; }
         [MaxLength(100)]
