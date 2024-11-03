@@ -21,7 +21,7 @@ namespace Optitime.Classes
         public DbSet<Role> roles { get; set; }
         public DbSet<TeamMembership> teammemberships { get; set; }
         public DbSet<Company> companies { get; set; }
-
+        public DbSet<UserPassword> userpasswords { get; set; }
 
     }
 }

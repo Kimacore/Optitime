@@ -323,7 +323,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPassword");
+                    b.ToTable("userpasswords");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Department", b =>

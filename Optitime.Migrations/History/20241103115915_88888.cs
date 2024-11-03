@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Optitime.Migrations.History
 {
     /// <inheritdoc />
-    public partial class test3133112024 : Migration
+    public partial class _88888 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,6 +55,10 @@ namespace Optitime.Migrations.History
             migrationBuilder.DropForeignKey(
                 name: "FK_timeentries_users_UserId1",
                 table: "timeentries");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserPassword_users_UserId",
+                table: "UserPassword");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_users_companies_CompanyId",
@@ -120,6 +124,10 @@ namespace Optitime.Migrations.History
                 name: "PK_companies",
                 table: "companies");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_UserPassword",
+                table: "UserPassword");
+
             migrationBuilder.DropColumn(
                 name: "TimeEntryId",
                 table: "timeentries");
@@ -151,6 +159,10 @@ namespace Optitime.Migrations.History
             migrationBuilder.DropColumn(
                 name: "CompanyId",
                 table: "companies");
+
+            migrationBuilder.RenameTable(
+                name: "UserPassword",
+                newName: "userpasswords");
 
             migrationBuilder.RenameColumn(
                 name: "UserId1",
@@ -216,6 +228,11 @@ namespace Optitime.Migrations.History
                 name: "CompanyName",
                 table: "companies",
                 newName: "Name");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_UserPassword_UserId",
+                table: "userpasswords",
+                newName: "IX_userpasswords_UserId");
 
             migrationBuilder.AlterColumn<Guid>(
                 name: "TeamId",
@@ -413,6 +430,11 @@ namespace Optitime.Migrations.History
                 table: "companies",
                 column: "Id");
 
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_userpasswords",
+                table: "userpasswords",
+                column: "Id");
+
             migrationBuilder.CreateIndex(
                 name: "IX_timeentries_UserId",
                 table: "timeentries",
@@ -518,6 +540,14 @@ namespace Optitime.Migrations.History
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_userpasswords_users_UserId",
+                table: "userpasswords",
+                column: "UserId",
+                principalTable: "users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_users_companies_CompanyId",
                 table: "users",
                 column: "CompanyId",
@@ -594,6 +624,10 @@ namespace Optitime.Migrations.History
                 table: "timeentries");
 
             migrationBuilder.DropForeignKey(
+                name: "FK_userpasswords_users_UserId",
+                table: "userpasswords");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_users_companies_CompanyId",
                 table: "users");
 
@@ -657,6 +691,10 @@ namespace Optitime.Migrations.History
                 name: "PK_companies",
                 table: "companies");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_userpasswords",
+                table: "userpasswords");
+
             migrationBuilder.DropColumn(
                 name: "Id",
                 table: "teams");
@@ -672,6 +710,10 @@ namespace Optitime.Migrations.History
             migrationBuilder.DropColumn(
                 name: "Id",
                 table: "companies");
+
+            migrationBuilder.RenameTable(
+                name: "userpasswords",
+                newName: "UserPassword");
 
             migrationBuilder.RenameColumn(
                 name: "Id",
@@ -737,6 +779,11 @@ namespace Optitime.Migrations.History
                 name: "Name",
                 table: "companies",
                 newName: "CompanyName");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_userpasswords_UserId",
+                table: "UserPassword",
+                newName: "IX_UserPassword_UserId");
 
             migrationBuilder.AlterColumn<int>(
                 name: "TeamId",
@@ -970,6 +1017,11 @@ namespace Optitime.Migrations.History
                 table: "companies",
                 column: "CompanyId");
 
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_UserPassword",
+                table: "UserPassword",
+                column: "Id");
+
             migrationBuilder.CreateIndex(
                 name: "IX_timeentries_UserId1",
                 table: "timeentries",
@@ -1071,6 +1123,14 @@ namespace Optitime.Migrations.History
                 name: "FK_timeentries_users_UserId1",
                 table: "timeentries",
                 column: "UserId1",
+                principalTable: "users",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_UserPassword_users_UserId",
+                table: "UserPassword",
+                column: "UserId",
                 principalTable: "users",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);

@@ -12,8 +12,8 @@ using Optitime.Classes;
 namespace Optitime.Migrations.History
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241103102335_test3133112024")]
-    partial class test3133112024
+    [Migration("20241103115915_88888")]
+    partial class _88888
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -326,7 +326,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPassword");
+                    b.ToTable("userpasswords");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Department", b =>
