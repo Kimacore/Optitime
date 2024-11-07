@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace Optitime.Classes
 {
-    [Index(nameof(Name), IsUnique = true)]
-    public class Role
+    public class Privilege
     {
         [Key]
         public Guid Id { get; set; }
-        [MaxLength(50)]
-        [Required]
+
+        [Required, MaxLength(100)]
         public string Name { get; set; }
+
+        public virtual ICollection<OrgRolesPrivileges> OrgRoles { get; set; } = new List<OrgRolesPrivileges>();
     }
 }

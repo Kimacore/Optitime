@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Optitime.Classes
 {
-    public class UserPassword
+    public class AdminPassword
     {
         [Key]
         public Guid Id { get; set; }
 
         [Required]
-        public required string PasswordHash { get; set; }
+        public string PasswordHash { get; set; }
 
         public Guid UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        [InverseProperty(nameof(User.Password))]
-        public virtual User? User { get; set; }
+        [InverseProperty(nameof(Admin.Password))]
+        public virtual Admin? Admin { get; set; }
     }
 }

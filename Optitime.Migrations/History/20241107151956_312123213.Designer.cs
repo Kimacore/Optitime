@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Optitime.Classes;
@@ -11,9 +12,11 @@ using Optitime.Classes;
 namespace Optitime.Migrations.History
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241107151956_312123213")]
+    partial class _312123213
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace Optitime.Migrations.History
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admin");
+                    b.ToTable("admin");
                 });
 
             modelBuilder.Entity("Optitime.Classes.AdminPassword", b =>
@@ -61,7 +64,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("AdminPassword");
+                    b.ToTable("adminpassword");
                 });
 
             modelBuilder.Entity("Optitime.Classes.ApplicationRole", b =>
@@ -77,7 +80,7 @@ namespace Optitime.Migrations.History
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppRole");
+                    b.ToTable("approles");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Department", b =>
@@ -101,28 +104,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Department");
-                });
-
-            modelBuilder.Entity("Optitime.Classes.OrgRolesPrivileges", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("OrganizationRoleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PrivilegeId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationRoleId");
-
-                    b.HasIndex("PrivilegeId");
-
-                    b.ToTable("OrgRolesPrivileges");
+                    b.ToTable("departments");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Organization", b =>
@@ -148,7 +130,7 @@ namespace Optitime.Migrations.History
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organization");
+                    b.ToTable("organizations");
                 });
 
             modelBuilder.Entity("Optitime.Classes.OrganizationRole", b =>
@@ -169,7 +151,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrgRole");
+                    b.ToTable("orgroles");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Privilege", b =>
@@ -185,7 +167,7 @@ namespace Optitime.Migrations.History
 
                     b.HasKey("Id");
 
-                    b.ToTable("Privileges");
+                    b.ToTable("privileges");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Project", b =>
@@ -225,7 +207,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Project");
+                    b.ToTable("projects");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Task", b =>
@@ -269,7 +251,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("TaskName")
                         .IsUnique();
 
-                    b.ToTable("Task");
+                    b.ToTable("tasks");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Team", b =>
@@ -293,7 +275,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Team");
+                    b.ToTable("teams");
                 });
 
             modelBuilder.Entity("Optitime.Classes.TeamMembership", b =>
@@ -314,7 +296,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TeamMembership");
+                    b.ToTable("teammemberships");
                 });
 
             modelBuilder.Entity("Optitime.Classes.TimeEntry", b =>
@@ -354,7 +336,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TimeEntry");
+                    b.ToTable("timeentries");
                 });
 
             modelBuilder.Entity("Optitime.Classes.User", b =>
@@ -407,7 +389,7 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("User");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("Optitime.Classes.UserPassword", b =>
@@ -428,7 +410,7 @@ namespace Optitime.Migrations.History
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("UserPassword");
+                    b.ToTable("userpasswords");
                 });
 
             modelBuilder.Entity("Optitime.Classes.UserRole", b =>
@@ -449,7 +431,22 @@ namespace Optitime.Migrations.History
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("userroles");
+                });
+
+            modelBuilder.Entity("OrganizationRolePrivilege", b =>
+                {
+                    b.Property<Guid>("OrganizationRolesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PrivilegesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OrganizationRolesId", "PrivilegesId");
+
+                    b.HasIndex("PrivilegesId");
+
+                    b.ToTable("OrganizationRolePrivilege");
                 });
 
             modelBuilder.Entity("Optitime.Classes.AdminPassword", b =>
@@ -472,25 +469,6 @@ namespace Optitime.Migrations.History
                         .IsRequired();
 
                     b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("Optitime.Classes.OrgRolesPrivileges", b =>
-                {
-                    b.HasOne("Optitime.Classes.OrganizationRole", "OrganizationRole")
-                        .WithMany("OrgPrivileges")
-                        .HasForeignKey("OrganizationRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Optitime.Classes.Privilege", "Privilege")
-                        .WithMany("OrgRoles")
-                        .HasForeignKey("PrivilegeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrganizationRole");
-
-                    b.Navigation("Privilege");
                 });
 
             modelBuilder.Entity("Optitime.Classes.OrganizationRole", b =>
@@ -658,6 +636,21 @@ namespace Optitime.Migrations.History
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OrganizationRolePrivilege", b =>
+                {
+                    b.HasOne("Optitime.Classes.OrganizationRole", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationRolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Optitime.Classes.Privilege", null)
+                        .WithMany()
+                        .HasForeignKey("PrivilegesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Optitime.Classes.Admin", b =>
                 {
                     b.Navigation("Password");
@@ -675,14 +668,7 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.OrganizationRole", b =>
                 {
-                    b.Navigation("OrgPrivileges");
-
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("Optitime.Classes.Privilege", b =>
-                {
-                    b.Navigation("OrgRoles");
                 });
 
             modelBuilder.Entity("Optitime.Classes.User", b =>

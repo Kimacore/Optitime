@@ -16,20 +16,20 @@ namespace Optitime.Classes
         public Guid Id { get; set; }
         [MaxLength(150)]
         [Required]
-        public string TaskName { get; set; }
+        public string? TaskName { get; set; }
         [MaxLength(500)]
-        public string Description { get; set; }
-        public Guid? ProjectId { get; set; }
+        public string? Description { get; set; }
+        public Guid ProjectId { get; set; }
         [Required]
         public Guid AssignedToUserId { get; set; }
         [MaxLength(50)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
         [Required]
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         [ForeignKey(nameof(ProjectId))]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
         [ForeignKey(nameof(AssignedToUserId))]
-        public User AssignedToUser { get; set; }
+        public User? AssignedToUser { get; set; }
     }
 }

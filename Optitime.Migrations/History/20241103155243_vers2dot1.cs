@@ -5,7 +5,7 @@
 namespace Optitime.Migrations.History
 {
     /// <inheritdoc />
-    public partial class test5 : Migration
+    public partial class vers2dot1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

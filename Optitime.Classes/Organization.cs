@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Optitime.Classes
 {
-    public class Company
+    public class Organization
     {
         [Key]
         public Guid Id { get; set; }
@@ -18,5 +18,7 @@ namespace Optitime.Classes
         public string Address { get; set; }
         [MaxLength(100)]
         public string Industry { get; set; }
+
+        public virtual ICollection<OrganizationRole> Roles { get; set; } = new List<OrganizationRole>();
     }
 }

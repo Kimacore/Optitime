@@ -12,8 +12,8 @@ using Optitime.Classes;
 namespace Optitime.Migrations.History
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241017183617_test3")]
-    partial class test3
+    [Migration("20241107113934_name+lastname")]
+    partial class namelastname
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,53 +27,49 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.Company", b =>
                 {
-                    b.Property<int>("CompanyId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CompanyId"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
                     b.Property<string>("Industry")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("CompanyId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("companies");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Department", b =>
                 {
-                    b.Property<int>("DepartmentId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DepartmentId"));
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("DepartmentName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("DepartmentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("DepartmentName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("departments");
@@ -81,11 +77,9 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.Project", b =>
                 {
-                    b.Property<int>("ProjectId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProjectId"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -95,13 +89,13 @@ namespace Optitime.Migrations.History
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ProjectName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
@@ -111,32 +105,30 @@ namespace Optitime.Migrations.History
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.HasKey("ProjectId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("ProjectName")
-                        .IsUnique();
 
                     b.ToTable("projects");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Role", b =>
                 {
-                    b.Property<int>("RoleId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleId"));
-
-                    b.Property<string>("RoleName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.HasKey("RoleId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("RoleName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("roles");
@@ -144,14 +136,12 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.Task", b =>
                 {
-                    b.Property<int>("TaskId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TaskId"));
-
-                    b.Property<int>("AssignedToUserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AssignedToUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -161,8 +151,8 @@ namespace Optitime.Migrations.History
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
@@ -177,7 +167,7 @@ namespace Optitime.Migrations.History
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.HasKey("TaskId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AssignedToUserId");
 
@@ -191,25 +181,23 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.Team", b =>
                 {
-                    b.Property<int>("TeamId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeamId"));
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TeamName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("TeamId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("TeamName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("teams");
@@ -217,19 +205,17 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.TeamMembership", b =>
                 {
-                    b.Property<int>("TeamMembershipId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TeamMembershipId"));
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("TeamId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("TeamMembershipId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TeamId");
 
@@ -240,11 +226,9 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.TimeEntry", b =>
                 {
-                    b.Property<int>("TimeEntryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TimeEntryId"));
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Duration")
                         .HasColumnType("double precision");
@@ -252,22 +236,22 @@ namespace Optitime.Migrations.History
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("TaskId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TaskId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("TimeEntryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
@@ -282,40 +266,43 @@ namespace Optitime.Migrations.History
 
             modelBuilder.Entity("Optitime.Classes.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<int?>("RoleId")
-                        .HasColumnType("integer");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
@@ -329,6 +316,27 @@ namespace Optitime.Migrations.History
                     b.HasIndex("TeamId");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("Optitime.Classes.UserPassword", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("userpasswords");
                 });
 
             modelBuilder.Entity("Optitime.Classes.Department", b =>
@@ -454,6 +462,22 @@ namespace Optitime.Migrations.History
                     b.Navigation("Role");
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("Optitime.Classes.UserPassword", b =>
+                {
+                    b.HasOne("Optitime.Classes.User", "User")
+                        .WithOne("Password")
+                        .HasForeignKey("Optitime.Classes.UserPassword", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Optitime.Classes.User", b =>
+                {
+                    b.Navigation("Password");
                 });
 #pragma warning restore 612, 618
         }

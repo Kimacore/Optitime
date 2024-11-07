@@ -26,10 +26,10 @@ namespace Optitime.Classes
         public DateTime EndDate { get; set; }
         [MaxLength(50)]
         [Required]
-        public string Status { get; set; }
+        public required string Status { get; set; }
         [Required]
         public Guid OwnerId { get; set; }
         [ForeignKey(nameof(OwnerId))]
-        public User Owner { get; set; }
+        public User? Owner { get; set; }
     }
 }

@@ -18,8 +18,8 @@ namespace Optitime.Classes
         [Required]
         public string Name { get; set; }
         [Required]
-        public Guid CompanyId { get; set; }
-        [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
+        public Guid OrganizationId { get; set; }
+        [ForeignKey(nameof(OrganizationId))]
+        public Organization? Organization { get; set; }
     }
 }
