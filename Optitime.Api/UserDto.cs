@@ -23,6 +23,8 @@ namespace Optitime.Api
         [Required]
         public string Email { get; set; }
 
+        public Guid? ApplicationRoleId { get; set; }
+
         public UserDto() { }
         public UserDto(User user) {
             this.Id = user.Id;
@@ -30,6 +32,7 @@ namespace Optitime.Api
             this.Name = user.Name;
             this.LastName = user.LastName;
             this.Email = user.Email;
+            this.ApplicationRoleId = user.ApplicationRoleId;
         }
     }
 }
