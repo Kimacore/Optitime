@@ -23,6 +23,7 @@ namespace Optitime.Api
         [Required]
         public string Email { get; set; }
 
+        public UserDto() { }
         public UserDto(User user) {
             this.Id = user.Id;
             this.Login = user.Login;

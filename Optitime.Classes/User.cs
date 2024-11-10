@@ -33,11 +33,11 @@ namespace Optitime.Classes
         [InverseProperty(nameof(UserPassword.User))]
         public virtual UserPassword? Password { get; set; }
 
-        public Guid DepartmentId { get; set; }
-        public Guid TeamId { get; set; }
-        public Guid OrganizationId { get; set; }
+        public Guid? DepartmentId { get; set; }
+        public Guid? TeamId { get; set; }
+        public Guid? OrganizationId { get; set; }
 
-        public Guid ApplicationRoleId { get; set; }
+        public Guid? ApplicationRoleId { get; set; }
 
 
         // Навигационные свойства

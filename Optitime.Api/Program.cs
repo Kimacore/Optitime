@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Optitime.Classes;
+using Optitime.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,11 +37,11 @@ services.AddAuthentication();
 var app = builder.Build();
 
 app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapGet("/", () => "Optitime Service");
 
-
+app.MapGroup("/users").MapUsersApi();//.RequireAuthorization();
 
 
 
