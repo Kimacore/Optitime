@@ -28,8 +28,8 @@ namespace Optitime.Classes
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         [ForeignKey(nameof(ProjectId))]
-        public Project? Project { get; set; }
+        public virtual Project? Project { get; set; }
         [ForeignKey(nameof(AssignedToUserId))]
-        public User? AssignedToUser { get; set; }
+        public virtual User? AssignedToUser { get; set; }
     }
 }

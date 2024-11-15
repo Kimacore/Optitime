@@ -22,12 +22,12 @@ namespace Optitime.Classes
         public double Duration { get; set; }
 
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+        public virtual User User { get; set; }
         [ForeignKey(nameof(TeamId))]
-        public Team Team { get; set; }
+        public virtual Team Team { get; set; }
         [ForeignKey(nameof(TaskId))]
-        public Task Task { get; set; }
+        public virtual Task Task { get; set; }
         [ForeignKey(nameof(ProjectId))]
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
     }
 }

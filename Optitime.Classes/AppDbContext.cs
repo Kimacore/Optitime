@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,14 @@ namespace Optitime.Classes
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies()
+                          .LogTo(message => Debug.WriteLine(message), LogLevel.Information)
+                          .EnableSensitiveDataLogging();
         }
         public DbSet<User> User { get; set; }
         public DbSet<Team> Team { get; set; }

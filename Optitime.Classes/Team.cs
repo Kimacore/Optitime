@@ -20,6 +20,6 @@ namespace Optitime.Classes
         [Required]
         public Guid DepartmentId { get; set; }
         [ForeignKey(nameof(DepartmentId))]
-        public Department Department { get; set; }
+        public virtual Department Department { get; set; }
     }
 }

@@ -30,6 +30,6 @@ namespace Optitime.Classes
         [Required]
         public Guid OwnerId { get; set; }
         [ForeignKey(nameof(OwnerId))]
-        public User? Owner { get; set; }
+        public virtual User? Owner { get; set; }
     }
 }

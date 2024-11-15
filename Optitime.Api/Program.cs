@@ -29,6 +29,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(configuration["JWT:Key"]!)),
         ValidateAudience = false
+        
     };
 
 });
@@ -50,7 +51,7 @@ app.MapPost("/login/{username}",
             db.User.FirstOrDefaultAsync(u => u.Login == username);
 
         if (user is null || user.Password?.PasswordHash is null)
-            return Results.Json(new { message = "Password hash is missing" }, statusCode: StatusCodes.Status401Unauthorized);
+            return Results.Unauthorized();
 
         byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(password));
         string hex = BitConverter.ToString(hash).Replace("-", "");
@@ -61,16 +62,16 @@ app.MapPost("/login/{username}",
         var claims = new List<Claim>
     {
         new(ClaimTypes.Name, username),
-        new("id", user.Id.ToString())
+        new("id", user.Id.ToString()),
+        new(ClaimTypes.Role, user.ApplicationRole.RoleName),
+        new(ClaimTypes.Email, user.Email)
     };
 
-        if (user.ApplicationRole != null)
-           claims.Add(new(ClaimTypes.Role, user.ApplicationRole.RoleName));
 
         var jwt = new JwtSecurityToken(
             claims: claims,
             issuer: configuration["Jwt:Issuer"],
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
             signingCredentials:
                 new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),

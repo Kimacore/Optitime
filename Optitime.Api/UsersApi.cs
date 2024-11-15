@@ -1,6 +1,7 @@
 ﻿using Optitime.Classes;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Optitime.Api
 {
@@ -85,7 +86,6 @@ namespace Optitime.Api
 
                 if (usr is null)
                     return Results.BadRequest($"Login '{login}' not found");
-
                 usr.Name = user.Name;
                 usr.LastName = user.LastName;
 
@@ -115,11 +115,10 @@ namespace Optitime.Api
             {
                 var username = context.User.Identity?.Name;
                 var userid = Guid.Parse(context.User.FindFirst("id")!.Value);
-                var usermail = context.User.FindFirst("email")!.Value;
-
+                var usermail = context.User.FindFirst(ClaimTypes.Email)?.Value;
                 return Results.Ok(new { Name = username, Id = userid, Email = usermail });
             });
-
+                
             return api;
         }
     }

@@ -20,6 +20,6 @@ namespace Optitime.Classes
         [Required]
         public Guid OrganizationId { get; set; }
         [ForeignKey(nameof(OrganizationId))]
-        public Organization? Organization { get; set; }
+        public virtual Organization? Organization { get; set; }
     }
 }
