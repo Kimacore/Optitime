@@ -34,5 +34,9 @@ namespace Optitime.Api
             this.Email = user.Email;
             this.ApplicationRoleId = user.ApplicationRoleId;
         }
+
+
     }
+
+    public record RegUserDto(string Login, string Name, string LastName, string Email, string Password);
 }

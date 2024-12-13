@@ -99,7 +99,7 @@ namespace Optitime.Api
             {
                 var user = await
                     db.User
-                      .FirstOrDefaultAsync(u => u.Name == login);
+                      .FirstOrDefaultAsync(u => u.Login == login);
 
                 if (user is null)
                     return Results.BadRequest($"User '{login}' not found");

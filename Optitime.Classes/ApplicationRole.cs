@@ -16,7 +16,7 @@ namespace Optitime.Classes
         [Required]
         public string RoleName { get; set; }
 
-        // Коллекция пользователей, которые имеют эту роль в приложении
+        
         public virtual ICollection<User> Users { get; set; } = new List<User>();
     }
 }

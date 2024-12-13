@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Optitime.Classes;
 using Optitime.Api;
+using Microsoft.AspNetCore.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,16 @@ var configuration = builder.Configuration;
 
 services.AddDbContext<AppDbContext>(opt => 
     opt.UseNpgsql(configuration.GetConnectionString("Optitime")));
+
+services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -28,14 +39,15 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
         ValidIssuer = configuration["Jwt:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(configuration["JWT:Key"]!)),
-        ValidateAudience = false
-        
-    };
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
 
+    };
 });
+
 services.AddAuthorization();
 var app = builder.Build();
-
+app.UseCors("AllowVueApp");
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -71,7 +83,7 @@ app.MapPost("/login/{username}",
         var jwt = new JwtSecurityToken(
             claims: claims,
             issuer: configuration["Jwt:Issuer"],
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(10)),
             signingCredentials:
                 new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
@@ -79,4 +91,58 @@ app.MapPost("/login/{username}",
 
         return Results.Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
     });
+
+app.MapPost("/register", async (RegUserDto userdto, AppDbContext db) =>
+{
+    var existingUser = await db.User.FirstOrDefaultAsync(u => u.Login == userdto.Login || u.Email == userdto.Email);
+    if (existingUser != null)
+    {
+        return Results.BadRequest(new { error = "ѕользователь с таким логином или email уже существует." });
+    }
+
+    var userId = Guid.NewGuid();
+    var userRole = await db.AppRole.FirstOrDefaultAsync(role => role.RoleName == "User");
+
+    db.User.Add(new User
+    {
+        Id = userId,
+        Login = userdto.Login,
+        Name = userdto.Name,
+        LastName = userdto.LastName,
+        Email = userdto.Email,
+        ApplicationRoleId = userRole.Id
+    });
+
+    byte[] hash = SHA512.HashData(Encoding.UTF8.GetBytes(userdto.Password));
+    string hex = BitConverter.ToString(hash).Replace("-", "");
+
+    db.UserPassword.Add(new UserPassword
+    {
+        Id = Guid.NewGuid(),
+        PasswordHash = hex,
+        UserId = userId
+    });
+
+    await db.SaveChangesAsync();
+
+    var claims = new List<Claim>
+    {
+        new(ClaimTypes.Name, userdto.Login),
+        new("id", userId.ToString()),
+        new(ClaimTypes.Role, userRole.RoleName),
+        new(ClaimTypes.Email, userdto.Email)
+    };
+
+    var jwt = new JwtSecurityToken(
+        claims: claims,
+        issuer: configuration["Jwt:Issuer"],
+        expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(10)),
+        signingCredentials: new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+            SecurityAlgorithms.HmacSha256));
+
+
+    return Results.Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+});
+
 app.Run();
