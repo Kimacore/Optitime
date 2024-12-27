@@ -16,8 +16,18 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-services.AddDbContext<AppDbContext>(opt => 
-    opt.UseNpgsql(configuration.GetConnectionString("Optitime")));
+services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseNpgsql(configuration.GetConnectionString("Optitime"), optionsBuilder =>
+    {
+        // Настраиваем стратегию повторных попыток при временных сбоях
+        optionsBuilder.EnableRetryOnFailure(
+            maxRetryCount: 5, // Максимальное количество повторов
+            maxRetryDelay: TimeSpan.FromSeconds(10), // Максимальная задержка между попытками
+            errorCodesToAdd: null // Дополнительные коды ошибок, которые нужно обработать
+        );
+    });
+});
 
 services.AddCors(options =>
 {
@@ -45,17 +55,24 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     };
 });
 
+services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true; // Для форматирования JSON, если нужно
+    });
+
 services.AddAuthorization();
 var app = builder.Build();
 app.UseCors("AllowVueApp");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.MapControllers();
 app.MapGet("/", () => "Optitime Service");
 
-app.MapGroup("/users").MapUsersApi().RequireAuthorization(e => e.RequireRole("Admin"));
+app.MapGroup("/users").MapUsersApi();
 app.MapGroup("/roles").MapRolesApi().RequireAuthorization(e => e.RequireRole("Admin"));
-
+app.MapGroup("/projects").MapProjectsApi();
 app.MapPost("/login/{username}",
     async (string username, [FromBody] string password, AppDbContext db) =>
     {
@@ -83,7 +100,7 @@ app.MapPost("/login/{username}",
         var jwt = new JwtSecurityToken(
             claims: claims,
             issuer: configuration["Jwt:Issuer"],
-            expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(10)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromHours(5)),
             signingCredentials:
                 new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
@@ -136,7 +153,7 @@ app.MapPost("/register", async (RegUserDto userdto, AppDbContext db) =>
     var jwt = new JwtSecurityToken(
         claims: claims,
         issuer: configuration["Jwt:Issuer"],
-        expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(10)),
+        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(3)),
         signingCredentials: new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
             SecurityAlgorithms.HmacSha256));

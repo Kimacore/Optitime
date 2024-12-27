@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import apiClient from './axios.js';
 
-const decodeToken = (token) => {
+export const decodeToken = (token) => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     return payload;

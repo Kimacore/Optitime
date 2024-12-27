@@ -1,4 +1,4 @@
-<script>
+<script setup>
   import { ref } from 'vue';
   import Card from 'primevue/card';
   import InputText from 'primevue/inputtext';
@@ -7,75 +7,180 @@
   import { useRouter } from 'vue-router';
   import { useAuthStore } from '../auth.js';
 
-  export default {
-    name: 'LoginView',
-    components: {
-      Card,
-      InputText,
-      Password,
-      Button
-    },
-    setup() {
-      const username = ref('');
-      const password = ref('');
-      const router = useRouter();
-      const authStore = useAuthStore();
+  const username = ref('');
+  const password = ref('');
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const errors = ref({
+    username: '',
+    password: ''
+  });
 
-      const signIn = async () => {
+  const validateForm = () => {
+    errors.value = {
+      username: '',
+      password: ''
+    };
+
+    let isValid = true;
+
+    if (!username.value) {
+      errors.value.username = 'Поле "Имя пользователя" не может быть пустым.';
+      isValid = false;
+    }
+
+    if (!password.value) {
+      errors.value.password = 'Поле "Пароль" не может быть пустым.';
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const signIn = async () => {
+    if (validateForm()) {
+      try {
         await authStore.login(username.value, password.value);
-        router.push('/')
+        router.push('/main');
+      } catch (error) {
+        console.error('Ошибка авторизации:', error);
       }
-
-      return { username, password, signIn };
-    
     }
   };
 </script>
 
 <template>
-  <Card>
-    <template #title>
-      <div class="centered-title">Авторизация</div>
-    </template>
-    <template #content>
-      <div class="p-field">
-        <label for="username">Имя пользователя</label>
-        <InputText id="username" v-model="username" />
-      </div>
-      <div class="p-field">
-        <label for="password">Пароль</label>
-        <Password id="password" v-model="password" />
-      </div>
-    </template>
-    <template #footer>
-      <Button label="Войти" icon="pi pi-check" @click="signIn" />
-    </template>
-  </Card>
+  <div class="login-container">
+    <Card>
+      <template #title>
+        <div class="centered-title">Вход</div>
+      </template>
+      <template #content>
+        <div class="p-field">
+          <label for="username">Имя пользователя</label>
+          <div class="input-wrapper">
+            <InputText id="username" v-model="username" />
+          </div>
+          <small v-if="errors.username" class="p-error">{{ errors.username }}</small>
+        </div>
+        <div class="p-field">
+          <label for="password">Пароль</label>
+          <div class="input-wrapper">
+            <Password v-model="password"
+                      :feedback="false"
+                      :style="{ width: '100%' }"
+                      :inputStyle="{ width: '100%' }" />
+          </div>
+          <small v-if="errors.password" class="p-error">{{ errors.password }}</small>
+        </div>
+      </template>
+      <template #footer>
+        <div class="footer-container">
+          <Button label="Войти" icon="pi pi-check" @click="signIn" class="centered-button" />
+        </div>
+        <div class="footer-text">
+          <span>Нет аккаунта?</span>
+          <a href="/register" class="register-link">Зарегистрироваться</a>
+        </div>
+      </template>
+    </Card>
+  </div>
 </template>
 
 <style scoped>
-  .registration-form {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+  }
+
+  .p-card {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    overflow: visible;
   }
 
   .p-field {
-    margin-bottom: 15px;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-    .p-field label {
+    .p-field small {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-top: 0.25rem;
     }
+
+    .p-field label {
+      position: absolute;
+      top: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 95%;
+      text-align: left;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+  .input-wrapper {
+    width: 95%;
+  }
+
+    .input-wrapper input {
+      width: 100%;
+    }
+
+  .p-error {
+    margin-top: 0.25rem;
+    color: red;
+    font-size: 0.75rem;
+    text-align: left;
+    width: 95%;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .centered-button {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 
   .centered-title {
     text-align: center;
     font-size: 1.5em;
     font-weight: bold;
+    margin-bottom: 1rem;
   }
+
+  .footer-text {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #333;
+  }
+
+    .footer-text .register-link {
+      margin-left: 0.2rem;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+      .footer-text .register-link:hover {
+        text-decoration: underline;
+      }
 </style>

@@ -12,13 +12,10 @@
 
     <div class="main-content">
       <div class="section-header">
-        <h1>Организация</h1>
+        <h1>Организации</h1>
       </div>
       <div class="profile-content">
-        <p>Имя: {{ user.name }}</p>
-        <p>Фамилия: {{ user.lastname }}</p>
-        <p>Email: {{ user.email }}</p>
-        <p>Возраст: {{ user.age }}</p>
+        
       </div>
     </div>
   </div>
@@ -70,11 +67,7 @@
     width: 100%;
   }
 
-  h1 {
-    margin: 0;
-    font-size: 1.8em;
-    font-weight: bold;
-  }
+ 
 
   .profile-content {
     margin-top: 20px;

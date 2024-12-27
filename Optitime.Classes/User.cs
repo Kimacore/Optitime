@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Optitime.Classes
@@ -30,6 +31,8 @@ namespace Optitime.Classes
         [Required]
         public string Email { get; set; }
 
+
+        [JsonIgnore]
         [InverseProperty(nameof(UserPassword.User))]
         public virtual UserPassword? Password { get; set; }
 
@@ -47,7 +50,7 @@ namespace Optitime.Classes
         public virtual Team? Team { get; set; }
         [ForeignKey(nameof(OrganizationId))]
         public virtual Organization? Organization { get; set; }
-
+        [JsonIgnore]
         [ForeignKey(nameof(ApplicationRoleId))]
         public virtual ApplicationRole? ApplicationRole { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
